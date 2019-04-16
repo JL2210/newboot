@@ -2,6 +2,7 @@
 bios_write:
 	push %bp
 	mov %sp, %bp
+	pusha
 	mov 4(%bp), %cx
 	mov 6(%bp), %si
 0:	lodsb
@@ -12,7 +13,7 @@ bios_write:
 	pop %ax
 	dec %cx
 	jmp 0b
-1:	mov 4(%bp), %ax
+1:	popa
 	mov %bp, %sp
 	pop %bp
 	ret

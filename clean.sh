@@ -1,3 +1,3 @@
 #!/bin/sh
 
-rm -f *.o boot *.com *.a
+rm -f *.o *.com *.a
