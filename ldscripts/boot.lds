@@ -1,3 +1,4 @@
+OUTPUT_ARCH(i8086)
 SECTIONS {
 	. = 0x7c00;
 }

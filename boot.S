@@ -1,17 +1,26 @@
+#define STACK_INIT push %bp; mov %sp, %bp
+#define STACK_FINI mov %bp, %sp; pop %bp
+
 .code16
-.globl _start
 /* The code */
+.globl _start
 _start:
 	call _GetIP
-	mov $0x07e0, %ax
+	mov %bx, %ax
+	add $0x200, %ax
+	shr $4, %ax
 	mov %ax, %ss
 	mov $0x2000, %sp
 	mov %cs, %ax
 	mov %ax, %ds
 	mov %ax, %es
+	mov %bx, %di
+	add $bufoff, %di
+	mov %dl, (%di)
 	call bios_clear
 	push $0
 	call bios_setcursor
+	mov %bx, %cx
 	add $msgoff, %cx
 	push %cx
 	mov %bx, %cx
@@ -23,35 +32,41 @@ _start:
 	push %ax
 	call bios_putchar
 	jmp 0b
-1:	# Do booting stuff
-	call bios_shutdown
+1:	mov %bx, %si
+	add $bufoff, %si
+	mov (%si), %dl
+	xor %ah, %ah
+	int $0x13
+	jc error
+	xor %dh, %dh
+	mov $0x02, %ah
+	mov $0x01, %al
+	add $endoff, %bx
+	xor %ch, %ch
+	mov $2, %cl
+	int $0x13
+	jc error
+	jmp end
 	cli
 	hlt
 #include "src/clear.s"
+#include "src/getchar.s"
+#include "src/getip.s"
 #include "src/setcursor.s"
 #include "src/write.s"
 #include "src/putchar.s"
-#include "src/getchar.s"
-#include "src/shutdown.s"
-/* Get instruction pointer */
-.globl _GetIP
-_GetIP:
-	push %bp
-	mov %sp, %bp
-	mov 2(%bp), %bx
-	sub $3, %bx
-	mov %bx, %cx
-	mov %bp, %sp
-	pop %bp
-	ret
+#include "src/error.s"
 /* Message */
 msg:
 	msgoff = . - .text
-	.ascii "Booting from disk... (press escape key to continue)\r\n"
+	.ascii "Press ESC to continue with boot\r\n"
 	msglen = . - msg
-/* Dual-purpose memory and filler */
+/* Padding */
 buf:
+	bufoff = . - .text
 	.fill 510-(.-_start), 1, 0
 /* BIOS magic number */
 magic:
 	.word 0xaa55
+end:
+	endoff = . - .text
