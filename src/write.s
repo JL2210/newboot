@@ -4,9 +4,9 @@ bios_write:
 	pusha
 	mov 4(%bp), %cx
 	mov 6(%bp), %si
-0:	lodsb
-	cmp $0, %cx
+0:	cmp $0, %cx
 	je 1f
+	lodsb
 	push %ax
 	call bios_putchar
 	dec %cx

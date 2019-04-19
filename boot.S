@@ -14,16 +14,12 @@ _start:
 	mov %cs, %ax
 	mov %ax, %ds
 	mov %ax, %es
-	mov %bx, %di
-	add $bufoff, %di
-	mov %dl, (%di)
 	call bios_clear
 	push $0
 	call bios_setcursor
 	mov %bx, %cx
 	add $msgoff, %cx
 	push %cx
-	mov %bx, %cx
 	push $msglen
 	call bios_write
 0:	call bios_getchar
@@ -32,10 +28,7 @@ _start:
 	push %ax
 	call bios_putchar
 	jmp 0b
-1:	mov %bx, %si
-	add $bufoff, %si
-	mov (%si), %dl
-	xor %ah, %ah
+1:	xor %ah, %ah
 	int $0x13
 	jc error
 	xor %dh, %dh
