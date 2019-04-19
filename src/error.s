@@ -1,8 +1,7 @@
 .globl error
 error:
-	mov %bx, %cx
-	add $errmsgoff, %cx
-	push %cx
+	add $errmsgoff, %bx
+	push %bx
 	push $errmsglen
 	call bios_write
 	cli

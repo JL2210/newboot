@@ -1,10 +1,8 @@
 /* Get instruction pointer */
 .globl _GetIP
 _GetIP:
-	push %bp
-	mov %sp, %bp
+	STACK_INIT
 	mov 2(%bp), %bx
 	sub $3, %bx
-	mov %bp, %sp
-	pop %bp
+	STACK_FINI
 	ret
