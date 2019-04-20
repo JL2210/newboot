@@ -6,7 +6,6 @@
 #include "../src/error.s"
 #include "../src/getchar.s"
 #include "../src/getip.s"
-#include "../src/putchar.s"
 #include "../src/read.s"
 #include "../src/setcursor.s"
 #include "../src/shutdown.s"

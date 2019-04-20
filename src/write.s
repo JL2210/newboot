@@ -15,3 +15,4 @@ bios_write:
 1:	popa
 	STACK_FINI
 	ret
+#include "putchar.s"
