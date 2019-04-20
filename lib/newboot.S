@@ -3,6 +3,7 @@
 
 .code16
 #include "../src/clear.s"
+#include "../src/error.s"
 #include "../src/getchar.s"
 #include "../src/getip.s"
 #include "../src/putchar.s"
