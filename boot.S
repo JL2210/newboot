@@ -47,7 +47,7 @@ _relocate:
 	mov %bx, %si
 	mov $reloc_addr, %di
 	rep movsw
-	jmp %ds:reloc_addr
+	jmp reloc_addr
 /* Fill to 512 bytes */
 buf:
 	.fill 0x01fe-(.-_start), 1, 0
