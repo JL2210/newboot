@@ -4,7 +4,7 @@
 /* Stage 2 */
 .code16
 	jmp _start
-	.fill 87-(.-.text), 1, 0
+	. = 0x57 + .text
 .globl _start
 _start:
 	call _GetIP

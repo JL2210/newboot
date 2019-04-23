@@ -4,7 +4,9 @@
 	reloc_addr = 0x7a00
 
 .code16
-/* Load and jump to second stage */
+/* Long jump to start */
+	ljmp $0, $_start
+/* Load and boot second stage */
 .globl _start
 _start:
 	call _GetIP
@@ -50,7 +52,7 @@ _relocate:
 	jmp reloc_addr
 /* Fill to 512 bytes */
 buf:
-	.fill 0x01fe-(.-_start), 1, 0
+	. = .text + 0x01fe
 /* BIOS magic number */
 magic:
 	.word 0xaa55
