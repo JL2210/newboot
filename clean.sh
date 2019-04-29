@@ -1,3 +1,9 @@
 #!/bin/sh
 
-rm -f *.o *.com *.a
+runcommand()
+{
+	echo ${@}
+	${@}
+}
+
+runcommand rm -f *.o *.com *.a

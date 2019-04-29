@@ -7,6 +7,9 @@
 #include "../src/getchar.s"
 #include "../src/getip.s"
 #include "../src/read.s"
+#include "../src/relocate.s"
 #include "../src/setcursor.s"
 #include "../src/shutdown.s"
 #include "../src/write.s"
+.code32
+#include "../src/pm/write.s"
