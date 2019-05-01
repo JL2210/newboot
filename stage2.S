@@ -38,15 +38,16 @@ _start:
 	push $0
 	call bios_setcursor
 	pop %ax
-/*
-	mov $0x0320, %ax
+	mov $0x02, %ah
+	mov $0x20, %al
 	mov $_end, %bx
-	xor %ch, %ch
-	mov $0x02, %cl
+	xor %cx, %cx
+	mov %cx, %es
+	mov $0x03, %cl
 	int $0x13
-*/
+	jc _error
 	cli
-	lgdt (gdt_pointer)
+	lgdt gdt_pointer
 	mov %cr0, %eax
 	or $0x01, %eax
 	mov %eax, %cr0
@@ -62,22 +63,8 @@ _enter_pm:
 	mov %ax, %gs
 	mov %ax, %ss
 	mov %ax, %es
-	mov $vid_mem, %ebx
-	push %ebx
-	pushl $msglen
-	pushl $msg
-	call pm_write
-	pop %eax
-	pop %eax
-	pop %eax
-#	jmp _end
+	jmp _end
 	hlt
-#include "src/pm/write.s"
-msg:
-	.ascii "Hello Protected Mode!"
-	msglen = . - msg
-vid_mem:
-	.long VIDEO_MEM
 buf:
 	. = .text + 0x01fe
 magic:

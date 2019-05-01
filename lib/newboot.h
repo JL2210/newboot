@@ -1,6 +1,8 @@
 #ifndef NEWBOOT_H
 #define NEWBOOT_H 1
 
+#include <stddef.h>
+
 #define VIDEO_MEM 0x0b8000
 
 /* Character, then pointer to buffer */
