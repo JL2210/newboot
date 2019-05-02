@@ -6,4 +6,5 @@ runcommand()
 	${@}
 }
 
-runcommand rm -f *.o *.com *.a
+runcommand rm -f *.com *.a
+runcommand rm -rf obj/

@@ -20,7 +20,8 @@ _start:
 	int $0x13
 	jc _error
 	xor %dh, %dh
-	mov $0x0201, %ax
+	mov $0x02, %ah
+	mov $0x01, %al
 	add $_stage2off, %bx
 	xor %ch, %ch
 	mov %ah, %cl /* A.K.A. mov $0x02, %cl */

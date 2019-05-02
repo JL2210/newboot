@@ -1,5 +1,5 @@
 #define STACK_INIT push %bp; mov %sp, %bp
-#define STACK_FINI mov %bp, %sp; pop %bp
+#define STACK_FINI leave
 
 .code16
 #include "../src/clear.s"

@@ -70,3 +70,6 @@ buf:
 magic:
 	.word 0xaa55
 _end:
+        xor %ebp, %ebp
+        and $-16, %esp
+        call _start_c

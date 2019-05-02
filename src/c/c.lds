@@ -1,6 +1,0 @@
-OUTPUT_FORMAT(binary)
-OUTPUT_ARCH(i386)
-SECTIONS {
-	. = 0x7a00;
-}
-ENTRY(_init_c)

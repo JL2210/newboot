@@ -10,9 +10,9 @@ pm_write:
 	lodsb
 	push %edx
 	push %edi
-	push %ax
+	push %eax
 	call pm_putchar
-	pop %ax
+	pop %eax
 	pop %eax
 	pop %edx
 	dec %ecx
