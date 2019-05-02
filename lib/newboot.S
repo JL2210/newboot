@@ -11,5 +11,3 @@
 #include "../src/setcursor.s"
 #include "../src/shutdown.s"
 #include "../src/write.s"
-.code32
-#include "../src/pm/write.S"

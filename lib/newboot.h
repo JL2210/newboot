@@ -25,7 +25,7 @@ extern unsigned char inb(unsigned short);
 extern void outb(unsigned short, unsigned char);
 
 /* Nothing */
-extern int keyboard_init(void);
+extern void keyboard_init(void);
 
 /* Array of keyboard scancode (set 1) to ASCII character table */
 extern uint8_t kbd_sc[];

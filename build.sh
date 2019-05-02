@@ -21,10 +21,11 @@ runcommand ${CC} -m32 -Os -c src/c/start_c.c -o obj/start_c.o
 runcommand ${CC} -m32 -Os -I./lib -c src/c/keyboard.c -o obj/keyboard.o
 runcommand ${CC} -m32 -Os -I./lib -c src/c/io.c -o obj/io.o
 runcommand ${CC} -m32 -Os -I./lib -c src/c/main.c -o obj/main.o
-runcommand ${CC} -m32 -I./lib -c src/pm/write.S -o obj/write.o
-runcommand ${LD} obj/stage2.o obj/start_c.o obj/main.o obj/write.o obj/keyboard.o obj/io.o -o stage2.com -Tldscripts/boot.lds
+runcommand ${CC} -m32 -Os -I./lib -c src/pm/putchar.c -o obj/putchar.o
+runcommand ${CC} -m32 -Os -I./lib -c src/pm/write.c -o obj/write.o
+runcommand ${LD} obj/stage2.o obj/start_c.o obj/main.o obj/write.o obj/putchar.o obj/keyboard.o obj/io.o -o stage2.com -Tldscripts/boot.lds
 runcommand ${CC} -m16 -c lib/newboot.S -o obj/newboot.o
-runcommand ${AR} rc libnewboot.a obj/newboot.o obj/io.o obj/keyboard.o
+runcommand ${AR} rc libnewboot.a obj/newboot.o obj/write.o obj/putchar.o obj/io.o obj/keyboard.o
 echo "cat boot.com stage2.com > test.com"
 cat boot.com stage2.com > test.com
 runcommand truncate --size=1M test.com
