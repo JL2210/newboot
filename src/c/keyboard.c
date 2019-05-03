@@ -32,7 +32,6 @@ int pm_getsc(void)
 
 void keyboard_init(void)
 {
-	int ch;
 	static int ctr;
 	if(!ctr)
 	{

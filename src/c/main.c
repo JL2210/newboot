@@ -8,8 +8,8 @@
 void *vid_mem = (void *)VIDEO_MEM;
 
 #define _sz(x) sizeof(x)-1
-char kbd_init_msg[] = "Initializing keyboard...";
-char kbd_done_msg[] = "Done initializing keyboard.";
+char kbd_init_msg[] = "Initializing keyboard...\r\n";
+char kbd_done_msg[] = "Done initializing keyboard.\r\n";
 #if __STDC_HOSTED__
 # define pm_getchar(x) getchar()
 # define pm_putchar(x,y) putchar(x)
@@ -18,7 +18,6 @@ char kbd_done_msg[] = "Done initializing keyboard.";
 
 void main(void)
 {
-	int ch;
 	pm_write(kbd_init_msg, _sz(kbd_init_msg), &vid_mem);
 	pm_write(kbd_done_msg, _sz(kbd_done_msg), &vid_mem);
 }

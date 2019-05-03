@@ -11,7 +11,7 @@ runcommand()
 CC=${CC:=gcc}
 LD=${LD:=ld}
 AR=${AR:=ar}
-CC="${CC} -ffreestanding -fno-stack-protector -fno-PIE -nostdlib"
+CC="${CC} -ffreestanding -fno-stack-protector -fno-PIE -Wall -Wextra"
 
 mkdir ./obj || true
 runcommand ${CC} -m16 -c boot.S -o obj/boot.o
