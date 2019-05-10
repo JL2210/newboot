@@ -7,10 +7,10 @@
 #define VIDEO_MEM 0x0b8000
 
 /* Character, then pointer to buffer */
-extern void pm_putchar(int, void **);
+extern int pm_putchar(int, void **);
 
 /* String, then size, then pointer to buffer */
-extern void pm_write(const char *, size_t, void **);
+extern size_t pm_write(const char *, size_t, void **);
 
 /* Array of ASCII characters corresponding to scancodes */
 extern uint8_t pm_getchar(uint8_t []);

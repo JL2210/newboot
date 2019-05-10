@@ -63,13 +63,10 @@ _enter_pm:
 	mov %ax, %gs
 	mov %ax, %ss
 	mov %ax, %es
-	jmp _end
+	jmp _start_c
 	hlt
 buf:
 	. = .text + 0x01fe
 magic:
 	.word 0xaa55
 _end:
-        xor %ebp, %ebp
-        and $-16, %esp
-        call _start_c

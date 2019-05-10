@@ -9,7 +9,7 @@
 #define COLUMNS 160
 #define COLOR (B_WHITE)
 
-void pm_putchar(int c, void **ptr)
+int pm_putchar(int c, void **ptr)
 {
 	c &= 0xff;
 	c |= COLOR;
@@ -17,25 +17,26 @@ void pm_putchar(int c, void **ptr)
 	if(c == ('\n' | COLOR))
 	{
 		*ptr += COLUMNS;
-		return;
+		goto ret;
 	}
 	else if(c == ('\r' | COLOR))
 	{
 		*ptr -= ((intptr_t)*ptr - VIDEO_MEM) % COLUMNS;
-		return;
+		goto ret;
 	}
 	else if(c == ('\t' | COLOR))
 	{
 		*ptr += 16 - (((intptr_t)*ptr - VIDEO_MEM) % 16);
-		return;
+		goto ret;
 	}
 	else if(c == ('\b' | COLOR))
 	{
 		*ptr -= 2;
 		**(short **)ptr = 0;
-		return;
+		goto ret;
 	}
 
 	**(short **)ptr = (short)c;
 	*ptr += 2;
+ret:	return c & 0xff;
 }

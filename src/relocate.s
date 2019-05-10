@@ -1,6 +1,7 @@
 	reloc_addr = 0x7a00
 
 /* Relocate the bootloader to a different address */
+.globl _relocate
 _relocate:
         mov $0x100, %cx
         xor %ax, %ax
