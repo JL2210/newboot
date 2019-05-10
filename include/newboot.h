@@ -13,10 +13,10 @@ extern void pm_putchar(int, void **);
 extern void pm_write(const char *, size_t, void **);
 
 /* Array of ASCII characters corresponding to scancodes */
-extern int pm_getchar(uint8_t []);
+extern uint8_t pm_getchar(uint8_t []);
 
 /* Nothing */
-extern int pm_getsc(void);
+extern uint8_t pm_getsc(void);
 
 /* Port number */
 extern unsigned char inb(unsigned short);
