@@ -1,4 +1,4 @@
-	reloc_addr = 0x7a00
+	reloc_addr = 0x0600
 
 /* Relocate the bootloader to a different address */
 .globl _relocate
