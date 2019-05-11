@@ -1,5 +1,4 @@
 #include <newboot.h>
-#include <stdint.h>
 #if __STDC_HOSTED__
 # include <stdio.h>
 # include <unistd.h>

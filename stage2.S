@@ -31,6 +31,14 @@ gdt_pointer:
 	.byte 0 # Fix objdump output
 .globl _start
 _start:
+	cli
+	xor %ax, %ax
+	mov %ax, %ss
+	mov %ax, %es
+	mov $0x0400, %sp
+	push %cs
+	pop %ds
+	sti
 	mov $0x2401, %ax
 	int $0x15
 	jc _error
@@ -41,8 +49,6 @@ _start:
 	mov $0x02, %ah
 	mov $0x20, %al
 	mov $_end, %bx
-	xor %cx, %cx
-	mov %cx, %es
 	mov $0x03, %cl
 	int $0x13
 	jc _error
@@ -59,8 +65,6 @@ _start:
 _enter_pm:
 	mov $DATA_SEG, %ax
 	mov %ax, %ds
-	mov %ax, %fs
-	mov %ax, %gs
 	mov %ax, %ss
 	mov %ax, %es
 	jmp _start_c

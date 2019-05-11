@@ -6,14 +6,14 @@
 .globl _start
 _start:
 	call _GetIP
-	cld
 	cmp $reloc_addr, %bx
 	jne _relocate
 	cli
-	xor %ax, %ax
+	mov $0x8000, %ax
 	mov %ax, %ss
+	xor %ax, %ax
 	mov %ax, %es
-	mov $0x0400, %sp
+	mov %ax, %sp
 	push %cs
 	pop %ds
 	sti
