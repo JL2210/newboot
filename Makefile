@@ -13,7 +13,7 @@ all: ld-scripts test.com libnewboot.a
 ld-scripts:
 	@$(MAKE) -C ldscripts all
 
-stage2.com: obj/32/start_c.o obj/32/main.o obj/32/write.o obj/32/putchar.o obj/32/keyboard.o obj/32/io.o
+stage2.com: obj/32/start_c.o obj/32/main.o obj/32/write.o obj/32/putchar.o
 %.com: obj/16/%.o
 	$(LD) $^ -o $@ -Tldscripts/boot.lds
 
@@ -22,7 +22,7 @@ test.com: boot.com stage2.com
 	truncate --size=1M test.com
 	chmod a+x test.com
 
-libnewboot.a: obj/16/newboot.o obj/32/io.o obj/32/keyboard.o obj/32/write.o obj/32/putchar.o
+libnewboot.a: obj/16/newboot.o obj/32/write.o obj/32/putchar.o
 	$(AR) rc $@ $^
 
 obj/16/stage2.S: src/clear.s src/error.s src/setcursor.s
