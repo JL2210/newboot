@@ -1,20 +1,13 @@
 #include <newboot.h>
-#if __STDC_HOSTED__
-# include <stdio.h>
-# include <unistd.h>
-#endif
 
-void *vid_mem = (void *)VIDEO_MEM;
+volatile short *vid_mem = (volatile short *)VIDEO_MEM;
 
-#define _sz(x) sizeof(x)-1
-char welcome[] = "\t\tWelcome to the strange land of protected mode!\r\n";
-#if __STDC_HOSTED__
-# define pm_getchar(x) getchar()
-# define pm_putchar(x,y) putchar(x)
-# define pm_write(x,y,z) write(STDOUT_FILENO, x, y)
-#endif
+#define length(x) sizeof(x)-1
+const char welcome[] = "\t\tWelcome to the strange land of protected mode!\r\n";
 
-void main(void)
+int main(void)
 {
-	pm_write(welcome, _sz(welcome), &vid_mem);
+	clear(B_BLACK | LIGHT_GRAY, &vid_mem);
+	pm_write(welcome, length(welcome), B_BLACK | LIGHT_GRAY, &vid_mem);
+	return 0;
 }

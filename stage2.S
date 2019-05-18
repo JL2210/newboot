@@ -42,12 +42,11 @@ _start:
 	mov $0x2401, %ax
 	int $0x15
 	jc _error
-	call bios_clear
 	push $0
 	call bios_setcursor
 	pop %ax
 	mov $0x02, %ah
-	mov $0x20, %al
+	mov $0x0a, %al
 	mov $_end, %bx
 	mov $0x03, %cl
 	int $0x13
@@ -58,7 +57,6 @@ _start:
 	or $0x01, %eax
 	mov %eax, %cr0
 	ljmp $CODE_SEG, $_enter_pm
-#include "src/clear.s"
 #include "src/error.s"
 #include "src/setcursor.s"
 .code32

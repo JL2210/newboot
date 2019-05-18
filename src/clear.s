@@ -5,7 +5,7 @@ bios_clear:
 	mov $0x03, %al
 	int $0x10
 	mov $0x07, %ah
-	mov $0xf7, %bh
+	mov %ah, %bh
 	xor %cx, %cx
 	mov $80-1, %dl
 	mov $25-1, %dh
