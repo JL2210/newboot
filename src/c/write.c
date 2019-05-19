@@ -7,3 +7,8 @@ size_t pm_write(const char *str, size_t len, int color, volatile short **ptr)
 		pm_putchar(*str, color, ptr);
 	return len;
 }
+
+size_t write(const char *str, size_t len)
+{
+	return pm_write(str, len, COLOR, &vid_mem);
+}

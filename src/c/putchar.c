@@ -30,3 +30,8 @@ int pm_putchar(int c, int color, volatile short **ptr)
 	(*ptr)++;
 ret:	return c;
 }
+
+int putchar(int c)
+{
+	return pm_putchar(c, COLOR, &vid_mem);
+}

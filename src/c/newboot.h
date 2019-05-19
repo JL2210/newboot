@@ -11,17 +11,27 @@
 #define WHITE 0x0f00
 #define B_BLACK 0x0000
 #define BLACK 0x0000
+#define COLOR (B_BLACK | LIGHT_GRAY)
 #define COLUMNS 80
 #define ROWS 25
 
 /* Character, then color, then pointer to buffer */
 extern int pm_putchar(int, int, volatile short **);
 
+/* Character */
+extern int putchar(int);
+
 /* String, then size, then color, then pointer to buffer */
 extern size_t pm_write(const char *, size_t, int, volatile short **);
 
-/* Color */
-extern void clear(int, volatile short **);
+/* String, then size */
+extern size_t write(const char *, size_t);
+
+/* Color, then pointer to buffer */
+extern void pm_clear(int, volatile short **);
+
+/* Nothing */
+extern void clear(void);
 
 /* Pointer to current video memory location */
 extern volatile short *vid_mem;
