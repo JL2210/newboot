@@ -1,21 +1,25 @@
 LANG ?= c
 
-XC = g$(LANG)c
-LD = ld
-AR = ar
+XC = $(CROSS_COMPILE)g$(LANG)c
+CC = $(CROSS_COMPILE)gcc
+LD = $(CROSS_COMPILE)ld
+AR = $(CROSS_COMPILE)ar
 CFLAGS = -ffreestanding -fno-stack-protector -fno-PIE -Wall -Wextra -Os -I./src/$(LANG)
 
-SOURCE = src/c/main.$(LANG) src/c/putchar.$(LANG) src/c/start_c.$(LANG) src/c/write.$(LANG)
-OBJ = obj/32/io.o obj/32/keyboard.o obj/32/main.o obj/32/putchar.o obj/32/start_$(LANG).o obj/32/write.o
+SOURCE = src/$(LANG)/main.$(LANG) src/$(LANG)/putchar.$(LANG) src/$(LANG)/start.$(LANG) src/$(LANG)/write.$(LANG)
+OBJ = obj/32/io.o obj/32/keyboard.o obj/32/main.o obj/32/putchar.o obj/32/start.o obj/32/write.o
 
 .PRECIOUS: obj/16/%.o obj/32/%.o
 
 all: ld-scripts test.com libnewboot.a
 
+efi:
+	@$(MAKE) -C src/efi all
+
 ld-scripts:
 	@$(MAKE) -C ldscripts all
 
-stage2.com: obj/32/start_$(LANG).o obj/32/main.o obj/32/clear.o obj/32/write.o obj/32/putchar.o
+stage2.com: obj/32/start.o obj/32/main.o obj/32/clear.o obj/32/write.o obj/32/putchar.o obj/32/video.o
 %.com: obj/16/%.o
 	$(LD) $^ -o $@ -Tldscripts/boot.lds
 
@@ -31,13 +35,15 @@ obj/16/stage2.S: src/clear.s src/error.s src/setcursor.s
 obj/16/boot.S: src/getip.s src/error.s src/relocate.s
 obj/16/%.o: %.S
 	@mkdir -p obj/16 || true
-	$(XC) $(CFLAGS) -m16 -c $< -o $@
+	$(CC) $(CFLAGS) -m16 -c $< -o $@
 
 obj/32/%.o: src/$(LANG)/%.$(LANG)
 	@mkdir -p obj/32 || true
 	$(XC) $(CFLAGS) -m32 -c $< -o $@
+	objcopy --strip-unneeded $@
 
 clean:
+	@$(MAKE) -C src/efi clean
 	@$(MAKE) -C ldscripts clean
 	rm -f *.com *.a
 	rm -rf obj/

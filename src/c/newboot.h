@@ -5,35 +5,55 @@
 #include <stdint.h>
 
 #define VIDEO_MEM 0x0b8000
-#define B_LIGHT_GRAY 0x7000
-#define LIGHT_GRAY 0x0700
-#define B_WHITE 0xf000
-#define WHITE 0x0f00
-#define B_BLACK 0x0000
-#define BLACK 0x0000
-#define COLOR (B_BLACK | LIGHT_GRAY)
+#define LIGHT_GRAY 0x07
+#define WHITE 0x0f
+#define BLACK 0x00
+#define COLOR (vga_color(BLACK, LIGHT_GRAY))
 #define COLUMNS 80
 #define ROWS 25
 
-/* Character, then color, then pointer to buffer */
-extern int pm_putchar(int, int, volatile short **);
+#ifndef __GNUC__
+# define __attribute__(x) /* */
+#endif
+#define FORCE_INLINE __attribute__((__always_inline__))
+
+/* Character, then color */
+extern int pm_putchar(int, int);
 
 /* Character */
 extern int putchar(int);
 
-/* String, then size, then color, then pointer to buffer */
-extern size_t pm_write(const char *, size_t, int, volatile short **);
+/* String, then size, then color */
+extern size_t pm_write(const char *, size_t, int);
 
 /* String, then size */
 extern size_t write(const char *, size_t);
 
-/* Color, then pointer to buffer */
-extern void pm_clear(int, volatile short **);
+/* Color */
+extern void pm_clear(int);
 
 /* Nothing */
 extern void clear(void);
 
 /* Pointer to current video memory location */
 extern volatile short *vid_mem;
+
+/* X-position */
+extern int x;
+
+/* Y-position */
+extern int y;
+
+/* Nothing */
+static inline FORCE_INLINE int get_vid_pos(void)
+{
+	return (y * COLUMNS) + x;
+}
+
+/* background color, foreground color */
+static inline FORCE_INLINE int vga_color(int bg, int fg)
+{
+	return (bg << 12) | (fg << 8);
+}
 
 #endif

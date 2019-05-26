@@ -1,37 +1,37 @@
 #include <newboot.h>
 
-int pm_putchar(int c, int color, volatile short **ptr)
+int pm_putchar(int c, int color)
 {
-	c &= 0xff;
+	c &= 0x7f;
 
-	if(c == '\n')
+	if(c == '\n' || c == '\v')
 	{
-		*ptr += COLUMNS;
+		y++;
 		goto ret;
 	}
 	else if(c == '\r')
 	{
-		*ptr -= ((intptr_t)*ptr - VIDEO_MEM) % COLUMNS;
+		x = 0;
 		goto ret;
 	}
 	else if(c == '\t')
 	{
-		*ptr += 8 - (((intptr_t)*ptr - VIDEO_MEM) % 8);
+		x += 8 - (x % 8);
 		goto ret;
 	}
 	else if(c == '\b')
 	{
-		(*ptr)--;
-		**ptr = 0;
+		x--;
+		vid_mem[get_vid_pos()] = 0;
 		goto ret;
 	}
 
-	**ptr = (short)(c | color);
-	(*ptr)++;
+	vid_mem[get_vid_pos()] = (short)(c | color);
+	x++;
 ret:	return c;
 }
 
 int putchar(int c)
 {
-	return pm_putchar(c, COLOR, &vid_mem);
+	return pm_putchar(c, COLOR);
 }

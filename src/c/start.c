@@ -1,3 +1,5 @@
+#include <newboot.h>
+
 extern int main();
 
 void _start_c()
