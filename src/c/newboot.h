@@ -1,3 +1,22 @@
+/*
+ *  Copyright (C) 2019 James Larrowe
+ *
+ *  This file is part of Newboot.
+ *
+ *  Newboot is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Newboot is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with Newboot.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 #ifndef NEWBOOT_H
 #define NEWBOOT_H 1
 
@@ -17,40 +36,22 @@
 #endif
 #define FORCE_INLINE __attribute__((__always_inline__))
 
-/* Character, then color */
 extern int pm_putchar(int, int);
-
-/* Character */
 extern int putchar(int);
-
-/* String, then size, then color */
 extern size_t pm_write(const char *, size_t, int);
-
-/* String, then size */
 extern size_t write(const char *, size_t);
-
-/* Color */
 extern void pm_clear(int);
-
-/* Nothing */
 extern void clear(void);
 
-/* Pointer to current video memory location */
 extern volatile short *vid_mem;
-
-/* X-position */
 extern int x;
-
-/* Y-position */
 extern int y;
 
-/* Nothing */
 static inline FORCE_INLINE int get_vid_pos(void)
 {
 	return (y * COLUMNS) + x;
 }
 
-/* background color, foreground color */
 static inline FORCE_INLINE int vga_color(int bg, int fg)
 {
 	return (bg << 12) | (fg << 8);
