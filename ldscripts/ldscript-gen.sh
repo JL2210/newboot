@@ -22,7 +22,6 @@ if [ -z "${1}" ]; then
   exit 1;
 fi
 
-cat $(dirname ${0})/../header.h
 cat << "_EOF_"
 OUTPUT_ARCH(i8086)
 SECTIONS {

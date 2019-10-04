@@ -19,38 +19,16 @@
 
 #include <newboot.h>
 
-int pm_putchar(int c, int color)
+size_t color_write(const char *str, size_t len, int color)
 {
-	c &= 0x7f;
-
-	if(c == '\n' || c == '\v')
-	{
-		y++;
-		goto ret;
-	}
-	else if(c == '\r')
-	{
-		x = 0;
-		goto ret;
-	}
-	else if(c == '\t')
-	{
-		x += 8 - (x % 8);
-		goto ret;
-	}
-	else if(c == '\b')
-	{
-		x--;
-		vid_mem[get_vid_pos()] = 0;
-		goto ret;
-	}
-
-	vid_mem[get_vid_pos()] = (short)(c | color);
-	x++;
-ret:	return c;
+	size_t ctr = len;
+	for( ; ctr; ctr--, str++ )
+		color_putchar(*str, color);
+	return len;
 }
 
-int putchar(int c)
+size_t write(int fd, const void *buf, size_t len)
 {
-	return pm_putchar(c, COLOR);
+	(void)fd;
+	return color_write(buf, len, COLOR);
 }

@@ -19,7 +19,7 @@
 
 #include <newboot.h>
 
-void pm_clear(int color)
+void color_clear(int color)
 {
 	int ctr;
 	for( ctr = 0; ctr < COLUMNS*ROWS; ctr++ )
@@ -30,5 +30,5 @@ void pm_clear(int color)
 
 void clear(void)
 {
-	return pm_clear(COLOR);
+	return color_clear(COLOR);
 }

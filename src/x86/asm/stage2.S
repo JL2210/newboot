@@ -76,8 +76,8 @@ _start:
 	or $0x01, %eax
 	mov %eax, %cr0
 	ljmp $CODE_SEG, $_enter_pm
-#include "src/error.s"
-#include "src/setcursor.s"
+#include "error.s"
+#include "setcursor.s"
 .code32
 _enter_pm:
 	mov $DATA_SEG, %ax

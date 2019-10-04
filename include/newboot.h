@@ -36,11 +36,11 @@
 #endif
 #define FORCE_INLINE __attribute__((__always_inline__))
 
-extern int pm_putchar(int, int);
+extern int color_putchar(int, int);
 extern int putchar(int);
-extern size_t pm_write(const char *, size_t, int);
-extern size_t write(const char *, size_t);
-extern void pm_clear(int);
+extern size_t color_write(const char *, size_t, int);
+extern size_t write(int, const void *, size_t);
+extern void color_clear(int);
 extern void clear(void);
 
 extern volatile short *vid_mem;

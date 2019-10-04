@@ -17,20 +17,27 @@
 #  along with Newboot.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-LANG ?= c
+ARCH ?= x86
 
-XC = $(CROSS_COMPILE)g$(LANG)c
+ASM_DIR = src/$(ARCH)/asm
+
+vpath %.c src/$(ARCH)
+vpath %.c src/all
+
 CC = $(CROSS_COMPILE)gcc
 LD = $(CROSS_COMPILE)ld
 AR = $(CROSS_COMPILE)ar
-CFLAGS = -ffreestanding -fno-stack-protector -fno-PIE -Wall -Wextra -Os -I./src/$(LANG)
+CFLAGS = -ffreestanding -fno-stack-protector -fno-PIE \
+	 -Wall -Wextra -Os -I. -I./include
 
-SOURCE = src/$(LANG)/main.$(LANG) src/$(LANG)/putchar.$(LANG) src/$(LANG)/start.$(LANG) src/$(LANG)/write.$(LANG)
-OBJ = obj/32/io.o obj/32/keyboard.o obj/32/main.o obj/32/putchar.o obj/32/start.o obj/32/write.o
+ALL_SRC = src/all/main.c src/all/start.c src/all/write.c
+ARCH_SRC = src/$(ARCH)/clear.c src/$(ARCH)/video.c src/$(ARCH)/putchar.c
+ALL_OBJ = obj/32/main.o obj/32/start.o obj/32/write.o
+ARCH_OBJ = obj/32/clear.o obj/32/video.o obj/32/putchar.o
 
 .PRECIOUS: obj/16/%.o obj/32/%.o
 
-all: ld-scripts test.com libnewboot.a
+all: ld-scripts test.com
 
 efi:
 	@$(MAKE) -C src/efi all
@@ -38,7 +45,7 @@ efi:
 ld-scripts:
 	@$(MAKE) -C ldscripts all
 
-stage2.com: obj/32/start.o obj/32/main.o obj/32/clear.o obj/32/write.o obj/32/putchar.o obj/32/video.o
+stage2.com: $(ALL_OBJ) $(ARCH_OBJ)
 %.com: obj/16/%.o
 	$(LD) $^ -o $@ -Tldscripts/boot.lds
 
@@ -47,18 +54,15 @@ test.com: boot.com stage2.com
 	truncate --size=8K test.com
 	chmod a+x test.com
 
-libnewboot.a: obj/16/newboot.o obj/32/write.o obj/32/putchar.o
-	$(AR) rc $@ $^
-
-obj/16/stage2.S: src/clear.s src/error.s src/setcursor.s
-obj/16/boot.S: src/getip.s src/error.s src/relocate.s
-obj/16/%.o: %.S
+obj/16/stage2.o: $(ASM_DIR)/error.s $(ASM_DIR)/setcursor.s
+obj/16/boot.o: $(ASM_DIR)/getip.s $(ASM_DIR)/error.s $(ASM_DIR)/relocate.s
+obj/16/%.o: src/$(ARCH)/asm/%.S
 	@mkdir -p obj/16 || true
 	$(CC) $(CFLAGS) -m16 -c $< -o $@
 
-obj/32/%.o: src/$(LANG)/%.$(LANG)
+obj/32/%.o: %.c
 	@mkdir -p obj/32 || true
-	$(XC) $(CFLAGS) -m32 -c $< -o $@
+	$(CC) $(CFLAGS) -m32 -c $< -o $@
 	objcopy --strip-unneeded $@
 
 clean:

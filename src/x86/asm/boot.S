@@ -17,17 +17,50 @@
  *  along with Newboot.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <newboot.h>
+#define STACK_INIT push %bp; mov %sp, %bp
+#define STACK_FINI leave
 
-size_t pm_write(const char *str, size_t len, int color)
-{
-	size_t ctr = len;
-	for( ; ctr != 0; ctr--, str++ )
-		pm_putchar(*str, color);
-	return len;
-}
-
-size_t write(const char *str, size_t len)
-{
-	return pm_write(str, len, COLOR);
-}
+.code16
+/* Load and jump to second stage */
+.globl _start
+_start:
+	call _GetIP
+	cmp $reloc_addr, %bx
+	jne _relocate
+	cli
+	mov $0x8000, %ax
+	mov %ax, %ss
+	xor %ax, %ax
+	mov %ax, %es
+	mov %ax, %sp
+	push %cs
+	pop %ds
+	sti
+	xor %ah, %ah
+	int $0x13
+	jc _error
+	xor %dh, %dh
+	mov $0x02, %ah
+	mov $0x01, %al
+	mov $_start, %bx
+	xor %ch, %ch
+	mov %ah, %cl /* A.K.A. mov $0x02, %cl */
+	int $0x13
+	jc _error
+	cmp $0x01, %al
+	jne _error
+	mov %bx, %si
+	add $0x01fe, %si
+	mov (%si), %ax
+	cmp $0xaa55, %ax
+	jne _error
+	jmp *%bx
+#include "getip.s"
+#include "error.s"
+#include "relocate.s"
+/* Fill to 512 bytes */
+buf:
+	. = .text + 0x01fe
+/* BIOS magic number */
+magic:
+	.word 0xaa55
