@@ -24,6 +24,6 @@ const char welcome[] = "\t\tWelcome to the strange land of protected mode!\n";
 int main(void)
 {
 	clear();
-	write(1, welcome, sizeof(welcome));
+	write(welcome, sizeof(welcome)-1);
 	return 0;
 }

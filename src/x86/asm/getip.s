@@ -17,11 +17,10 @@
 #  along with Newboot.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-/* Get instruction pointer */
+/* Get instruction pointer in %bx */
 .globl _GetIP
 _GetIP:
-	STACK_INIT
-	mov 2(%bp), %bx
+	pop %bx
+	push %bx
 	sub $3, %bx
-	STACK_FINI
 	ret

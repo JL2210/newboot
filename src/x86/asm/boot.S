@@ -26,32 +26,38 @@
 _start:
 	call _GetIP
 	cmp $reloc_addr, %bx
+	/* Sets ds and es so we don't have to here */
 	jne _relocate
 	cli
-	mov $0x8000, %ax
+	mov $0x0080, %ax /* Set up stack segment */
 	mov %ax, %ss
-	xor %ax, %ax
-	mov %ax, %es
-	mov %ax, %sp
-	push %cs
-	pop %ds
+	mov $0x7500, %sp /* Set up temporary stack pointer */
 	sti
-	xor %ah, %ah
+	/* %ah is already 0 from setting the stack segment */
 	int $0x13
 	jc _error
-	xor %dh, %dh
-	mov $0x02, %ah
-	mov $0x01, %al
+	/* Work backwards to find the disk marked "bootable" */
+	lea magoff(%bx), %si
+	lea mbroff(%bx), %cx
+0:
+	cmp %cx, %si
+	je _error /* End of partition table */
+	/* TODO: better error messages */
+	sub $0x10, %si
+	testb $0x80, (%si)
+	jz 0b
+	/* When we get here, si holds the bootable record */
+	mov 1(%si), %dh
+	mov 2(%si), %cl
+	mov 3(%si), %ch
+	mov $0x0201, %ax /* Save a byte -- one move instead of two */
 	mov $_start, %bx
-	xor %ch, %ch
 	mov %ah, %cl /* A.K.A. mov $0x02, %cl */
 	int $0x13
 	jc _error
 	cmp $0x01, %al
 	jne _error
-	mov %bx, %si
-	add $0x01fe, %si
-	mov (%si), %ax
+	mov 510(%bx), %ax
 	cmp $0xaa55, %ax
 	jne _error
 	jmp *%bx
@@ -60,7 +66,11 @@ _start:
 #include "relocate.s"
 /* Fill to 512 bytes */
 buf:
-	. = .text + 0x01fe
+	. = .text + 446
+mbr:
+	mbroff = . - .text
+	. = .text + 510
 /* BIOS magic number */
 magic:
+	magoff = . - .text
 	.word 0xaa55

@@ -28,12 +28,12 @@ CC = $(CROSS_COMPILE)gcc
 LD = $(CROSS_COMPILE)ld
 AR = $(CROSS_COMPILE)ar
 CFLAGS = -ffreestanding -fno-stack-protector -fno-PIE \
-	 -Wall -Wextra -Os -I. -I./include
+	 -Wall -Wextra -Os -I. -I./include -I./src/$(ARCH)/include
 
-ALL_SRC = src/all/main.c src/all/start.c src/all/write.c
-ARCH_SRC = src/$(ARCH)/clear.c src/$(ARCH)/video.c src/$(ARCH)/putchar.c
-ALL_OBJ = obj/32/main.o obj/32/start.o obj/32/write.o
-ARCH_OBJ = obj/32/clear.o obj/32/video.o obj/32/putchar.o
+ALL_SRC = src/all/main.c
+ARCH_SRC = src/$(ARCH)/vga.c src/$(ARCH)/start.c src/$(ARCH)/pic.c
+ALL_OBJ = obj/32/main.o
+ARCH_OBJ = obj/32/vga.o obj/32/start.o obj/32/pic.o
 
 .PRECIOUS: obj/16/%.o obj/32/%.o
 
@@ -54,7 +54,7 @@ test.com: boot.com stage2.com
 	truncate --size=8K test.com
 	chmod a+x test.com
 
-obj/16/stage2.o: $(ASM_DIR)/error.s $(ASM_DIR)/setcursor.s
+obj/16/stage2.o: $(ASM_DIR)/error.s $(ASM_DIR)/a20.s
 obj/16/boot.o: $(ASM_DIR)/getip.s $(ASM_DIR)/error.s $(ASM_DIR)/relocate.s
 obj/16/%.o: src/$(ARCH)/asm/%.S
 	@mkdir -p obj/16 || true

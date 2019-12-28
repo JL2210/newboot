@@ -21,9 +21,9 @@ ARCH = $(shell gcc -dumpmachine | cut -d- -f1)
 BUILD = $(shell echo $(ARCH) | sed s,i[3456789]86,ia32,)
 
 PREFIX = /usr/local/prefix32/usr
-OBJS = newboot.o
-SO_TARGET = newboot.so
-TARGET = newboot.efi
+OBJS = start.o
+SO_TARGET = start.so
+TARGET = start.efi
 
 EFIINC = $(PREFIX)/include/efi
 EFIINCS = -I$(EFIINC) -I$(EFIINC)/$(BUILD) -I$(EFIINC)/protocol
